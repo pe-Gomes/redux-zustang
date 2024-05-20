@@ -1,8 +1,14 @@
+import { useCurrentLesson } from '@/store/slices/player'
+
 export function Header() {
+  const { currentLesson, currentModule } = useCurrentLesson()
+
   return (
     <header className="flex flex-col gap-1">
-      <h1 className="text-2xl font-bold">Discovering Redux</h1>
-      <span className="text-sm text-zinc-400">Module: Discovering Redux</span>
+      <h1 className="text-2xl font-bold">{currentLesson.title}</h1>
+      <span className="text-sm text-zinc-400">
+        Module: {currentModule.title}
+      </span>
     </header>
   )
 }
