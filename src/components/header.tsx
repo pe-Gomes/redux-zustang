@@ -1,10 +1,15 @@
-import { useAppSelector } from '@/store'
-import { useCurrentLesson } from '@/store/slices/player'
+import { useStore } from '@/zustand-store'
 import { Skeleton } from './ui/skeleton'
 
 export function Header() {
-  const { currentLesson, currentModule } = useCurrentLesson()
-  const isCourseLoading = useAppSelector((state) => state.player.isLoading)
+  const { isLoading: isCourseLoading, getCurrentLesson } = useStore((store) => {
+    return {
+      isLoading: store.isLoading,
+      getCurrentLesson: store.getCurrentLesson,
+    }
+  })
+
+  const { currentLesson, currentModule } = getCurrentLesson()
 
   return (
     <header className="flex flex-col gap-1">

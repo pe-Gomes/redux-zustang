@@ -1,4 +1,3 @@
-import { useAppDispatch, useAppSelector } from '@/store'
 import { Lecture } from './lecture'
 import {
   Accordion,
@@ -6,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './ui/accordion'
-import { play } from '@/store/slices/player'
+import { useStore } from '@/zustand-store'
 
 interface ModuleProps {
   moduleIndex: number
@@ -15,17 +14,18 @@ interface ModuleProps {
 }
 
 export function Module({ title, lecturesAmount, moduleIndex }: ModuleProps) {
-  const { currentLessonIndex, currentModuleIndex } = useAppSelector((state) => {
-    const { currentLessonIndex, currentModuleIndex } = state.player
-
-    return { currentLessonIndex, currentModuleIndex }
-  })
-
-  const lessons = useAppSelector(
-    (state) => state.player.course?.modules[moduleIndex].lessons
+  const { currentLessonIndex, currentModuleIndex, course, play } = useStore(
+    (store) => {
+      return {
+        currentLessonIndex: store.currentLessonIndex,
+        currentModuleIndex: store.currentModuleIndex,
+        course: store.course,
+        play: store.play,
+      }
+    }
   )
 
-  const dispatch = useAppDispatch()
+  const lessons = course?.modules[moduleIndex].lessons
 
   return (
     <Accordion type="single" collapsible>
@@ -59,12 +59,10 @@ export function Module({ title, lecturesAmount, moduleIndex }: ModuleProps) {
                     lessonIndex === currentLessonIndex
                   }
                   onPlay={() =>
-                    dispatch(
-                      play({
-                        moduleIndex,
-                        lessonIndex,
-                      })
-                    )
+                    play({
+                      moduleIndex,
+                      lessonIndex,
+                    })
                   }
                 />
               ))}

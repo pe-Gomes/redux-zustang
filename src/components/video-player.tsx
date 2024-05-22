@@ -1,16 +1,23 @@
 import ReactPlayer from 'react-player'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { next, useCurrentLesson } from '@/store/slices/player'
 import { Loader } from './loader'
+import { useStore } from '@/zustand-store'
 
 export function VideoPlayer() {
-  const { currentLesson: lesson } = useCurrentLesson()
-  const isCourseLoading = useAppSelector((state) => state.player.isLoading)
-
-  const dispatch = useAppDispatch()
+  const {
+    getCurrentLesson,
+    isLoading: isCourseLoading,
+    next,
+  } = useStore((store) => {
+    return {
+      getCurrentLesson: store.getCurrentLesson,
+      isLoading: store.isLoading,
+      next: store.next,
+    }
+  })
+  const { currentLesson: lesson } = getCurrentLesson()
 
   function handleNextVideo() {
-    dispatch(next())
+    next()
   }
 
   return (
