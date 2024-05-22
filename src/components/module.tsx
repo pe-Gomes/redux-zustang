@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { Lecture } from './lecture'
 import {
   Accordion,
@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './ui/accordion'
-import { useDispatch } from 'react-redux'
 import { play } from '@/store/slices/player'
 
 interface ModuleProps {
@@ -23,10 +22,10 @@ export function Module({ title, lecturesAmount, moduleIndex }: ModuleProps) {
   })
 
   const lessons = useAppSelector(
-    (state) => state.player.course.modules[moduleIndex].lessons
+    (state) => state.player.course?.modules[moduleIndex].lessons
   )
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   return (
     <Accordion type="single" collapsible>
@@ -48,7 +47,8 @@ export function Module({ title, lecturesAmount, moduleIndex }: ModuleProps) {
 
         <AccordionContent>
           <nav className="relative flex flex-col gap-4 p-6">
-            {lessons.length > 0 &&
+            {lessons &&
+              lessons.length > 0 &&
               lessons.map((lesson, lessonIndex) => (
                 <Lecture
                   key={lesson.id}

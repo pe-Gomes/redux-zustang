@@ -1,14 +1,87 @@
 import { describe, it, expect } from 'vitest'
 import {
   player as reducer,
-  playerSlice,
   play,
   next,
+  PlayerState,
 } from '@/store/slices/player'
+
+const initialState: PlayerState = {
+  course: {
+    id: 1,
+    title: 'React',
+    modules: [
+      {
+        id: 1,
+        title: 'Iniciando com React',
+        lessons: [
+          {
+            id: 'Jai8w6K_GnY',
+            title: 'CSS Modules',
+            duration: '13:45',
+          },
+          {
+            id: 'w-DW4DhDfcw',
+            title: 'Estilização do Post',
+            duration: '10:05',
+          },
+          {
+            id: 'D83-55LUdKE',
+            title: 'Componente: Header',
+            duration: '06:33',
+          },
+          {
+            id: 'W_ATsETujaY',
+            title: 'Componente: Sidebar',
+            duration: '09:12',
+          },
+          {
+            id: 'Pj8dPeameYo',
+            title: 'CSS Global',
+            duration: '03:23',
+          },
+          {
+            id: '8KBq2vhwbac',
+            title: 'Form de comentários',
+            duration: '11:34',
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: 'Estrutura da aplicação',
+        lessons: [
+          {
+            id: 'gE48FQXRZ_o',
+            title: 'Componente: Comment',
+            duration: '13:45',
+          },
+          {
+            id: 'Ng_Vk4tBl0g',
+            title: 'Responsividade',
+            duration: '10:05',
+          },
+          {
+            id: 'h5JA3wfuW1k',
+            title: 'Interações no JSX',
+            duration: '06:33',
+          },
+          {
+            id: '1G0vSTqWELg',
+            title: 'Utilizando estado',
+            duration: '09:12',
+          },
+        ],
+      },
+    ],
+  },
+  currentModuleIndex: 0,
+  currentLessonIndex: 0,
+  isLoading: false,
+}
+
 describe('player slice', () => {
   it('should be able to play', () => {
-    const initialState = playerSlice.getInitialState()
-
     const state = reducer(
       initialState,
       play({
@@ -22,8 +95,6 @@ describe('player slice', () => {
   })
 
   it('should be able to play next video automatically', () => {
-    const initialState = playerSlice.getInitialState()
-
     const state = reducer(
       initialState,
       play({
@@ -39,9 +110,7 @@ describe('player slice', () => {
   })
 
   it('should be able to play next video automatically when module ends', () => {
-    const initialState = playerSlice.getInitialState()
-
-    const numberOfLessons = initialState.course.modules[0].lessons.length
+    const numberOfLessons = initialState.course!.modules[0].lessons.length
 
     const state = reducer(
       initialState,
@@ -58,11 +127,9 @@ describe('player slice', () => {
   })
 
   it('should be able to stop when both modules and lessons ends', () => {
-    const initialState = playerSlice.getInitialState()
-
-    const numberOfModules = initialState.course.modules.length
+    const numberOfModules = initialState.course!.modules.length
     const numberOfLessons =
-      initialState.course.modules[numberOfModules - 1].lessons.length
+      initialState.course!.modules[numberOfModules - 1].lessons.length
 
     const state = reducer(
       initialState,

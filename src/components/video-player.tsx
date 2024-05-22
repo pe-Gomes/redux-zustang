@@ -1,11 +1,13 @@
 import ReactPlayer from 'react-player'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { next, useCurrentLesson } from '@/store/slices/player'
+import { Loader } from './loader'
 
 export function VideoPlayer() {
   const { currentLesson: lesson } = useCurrentLesson()
+  const isCourseLoading = useAppSelector((state) => state.player.isLoading)
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   function handleNextVideo() {
     dispatch(next())
@@ -13,14 +15,18 @@ export function VideoPlayer() {
 
   return (
     <div className="w-full bg-zinc-950 aspect-video max-h-screen">
-      <ReactPlayer
-        width="100%"
-        height="100%"
-        url={`https://www.youtube.com/watch?v=${lesson.id}`}
-        controls
-        playing
-        onEnded={handleNextVideo}
-      />
+      {isCourseLoading ? (
+        <Loader />
+      ) : (
+        <ReactPlayer
+          width="100%"
+          height="100%"
+          url={`https://www.youtube.com/watch?v=${lesson?.id}`}
+          controls
+          playing
+          onEnded={handleNextVideo}
+        />
+      )}
     </div>
   )
 }
